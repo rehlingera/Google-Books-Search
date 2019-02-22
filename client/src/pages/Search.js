@@ -36,39 +36,28 @@ class Search extends Component {
             })
     }
 
-    openBook = event => {
-        event.preventDefault();
-        var title = event.target.title;
-        var author = event.target.getAttribute('author');
-        var description = event.target.getAttribute('description');
-        var image = event.target.getAttribute('image');
-        var link = event.target.getAttribute('link');
-        var read = event.target.getAttribute('read');
-        var id = event.target.getAttribute('id');
+    openBook = id => {
+        var target = this.state.results.filter(item => item.id===id)
+        console.log(target);
         this.setState({
-            title: title,
-            author: author,
-            description: description,
-            image: image,
-            link: link,
-            read: read,
+            title: target[0].volumeInfo.title ? target[0].volumeInfo.title : "Unknown",
+            author: target[0].volumeInfo.authors ? target[0].volumeInfo.authors.join(', ') : "Unknown",
+            description: target[0].volumeInfo.description ? target[0].volumeInfo.description : "N/A",
+            image: target[0].volumeInfo.imageLinks && target[0].volumeInfo.imageLinks.thumbnail ? target[0].volumeInfo.imageLinks.thumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png",
+            link: target[0].volumeInfo.infoLink ? target[0].volumeInfo.infoLink : "",
             id: id
         });
     }
 
-    addBook = event => {
-        event.preventDefault();
-        var title = event.target.title;
-        var author = event.target.getAttribute('author');
-        var description = event.target.getAttribute('description');
-        var image = event.target.getAttribute('image');
-        var link = event.target.getAttribute('link');
+    addBook = id => {
+        var target = this.state.results.filter(item => item.id===id)
+        console.log(target);
         var bookData = {
-            title: title,
-            author: author,
-            description: description,
-            image: image,
-            link: link,
+            title: target[0].volumeInfo.title ? target[0].volumeInfo.title : "Unknown",
+            author: target[0].volumeInfo.authors ? target[0].volumeInfo.authors.join(', ') : "Unknown",
+            description: target[0].volumeInfo.description ? target[0].volumeInfo.description : "N/A",
+            image: target[0].volumeInfo.imageLinks && target[0].volumeInfo.imageLinks.thumbnail ? target[0].volumeInfo.imageLinks.thumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png",
+            link: target[0].volumeInfo.infoLink ? target[0].volumeInfo.infoLink : "",
             read: "false"
         };
         console.log(bookData);
@@ -94,12 +83,7 @@ class Search extends Component {
                         <div className="modal-footer">
                             <AddButton
                                 id={this.state.id}
-                                title={this.state.title}
-                                author={this.state.author}
-                                description={this.state.description}
-                                image={this.state.image}
-                                link={this.state.link}
-                                onClick={this.addBook}
+                                onClick={() => this.addBook(this.state.id)}
                             />
                         </div>
                     </div >
@@ -110,34 +94,16 @@ class Search extends Component {
                             <br />
                             <BookList>
                                 {this.state.results.map(item => (
-                                    <Item
-                                        key={item.id}
-                                        title={item.volumeInfo.title ? item.volumeInfo.title : "Unknown"}
-                                        author={item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : "Unknown"}
-                                        description={item.volumeInfo.description ? item.volumeInfo.description : "N/A"}
-                                        image={item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail ? item.volumeInfo.imageLinks.thumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png"}
-                                        link={item.volumeInfo.infoLink ? item.volumeInfo.infoLink : ""}
-                                        onClick={this.openBook}
-                                    >
+                                    <Item key={item.id}>
                                         <img src={item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.smallThumbnail ? item.volumeInfo.imageLinks.smallThumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png"} height="100px"></img>
                                         <p><b>{item.volumeInfo.title ? item.volumeInfo.title : "Unknown"}</b> by {item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : "Unknown"}</p>
                                         <ViewButton
                                             id={item.id}
-                                            title={item.volumeInfo.title ? item.volumeInfo.title : "Unknown"}
-                                            author={item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : "Unknown"}
-                                            description={item.volumeInfo.description ? item.volumeInfo.description : "N/A"}
-                                            image={item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail ? item.volumeInfo.imageLinks.thumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png"}
-                                            link={item.volumeInfo.infoLink ? item.volumeInfo.infoLink : ""}
-                                            onClick={this.openBook}
+                                            onClick={() => this.openBook(item.id)}
                                         />
                                         <AddButton
                                             id={item.id}
-                                            title={item.volumeInfo.title ? item.volumeInfo.title : "Unknown"}
-                                            author={item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : "Unknown"}
-                                            description={item.volumeInfo.description ? item.volumeInfo.description : "N/A"}
-                                            image={item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail ? item.volumeInfo.imageLinks.thumbnail : "https://unidive.co.nz/wp-content/themes/456sailing/assets/img/no-product-image.png"}
-                                            link={item.volumeInfo.infoLink ? item.volumeInfo.infoLink : ""}
-                                            onClick={this.addBook}
+                                            onClick={() => this.addBook(item.id)}
                                         />
                                     </Item>
                                 ))}

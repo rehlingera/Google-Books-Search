@@ -8,6 +8,7 @@ import NavBar from "../components/NavBar";
 
 class Books extends Component {
     state = {
+        allBooks: [],
         readList: [],
         finishedList: [],
         searchInput: "",
@@ -29,15 +30,16 @@ class Books extends Component {
         this.setState({
             [name]: value
         });
-        return this.state;
     };
 
     getBooks = () => {
         API.getBooks()
             .then(res => {
+                var allBooks = [];
                 var read = [];
                 var unread = [];
                 for (var i = 0; i < res.data.length; i++) {
+                    allBooks.push(res.data[i]);
                     if (res.data[i].read === "true") {
                         read.push(res.data[i])
                     }
@@ -45,14 +47,12 @@ class Books extends Component {
                         unread.push(res.data[i])
                     }
                 }
-                this.setState({ finishedList: read, readList: unread });
+                this.setState({ allBooks: allBooks, finishedList: read, readList: unread });
             })
             .catch(err => console.log(err));
     }
 
-    deleteBook = event => {
-        console.log(event.target.id)
-        var id = event.target.id;
+    deleteBook = id => {
         API.deleteBook(id)
             .then(() => {
                 this.getBooks();
@@ -61,28 +61,20 @@ class Books extends Component {
             .catch(err => console.log(err));
     }
 
-    openBook = event => {
-        event.preventDefault();
-        var title = event.target.title;
-        var author = event.target.getAttribute('author');
-        var description = event.target.getAttribute('description');
-        var image = event.target.getAttribute('image');
-        var link = event.target.getAttribute('link');
-        var read = event.target.getAttribute('read');
-        var id = event.target.getAttribute('id');
+    openBook = id => {
+        var target = this.state.allBooks.filter(item => item._id===id)
+        console.log(target);
         this.setState({
-            title: title,
-            author: author,
-            description: description,
-            image: image,
-            link: link,
-            read: read,
+            title: target[0].title,
+            author: target[0].author,
+            description: target[0].description,
+            image: target[0].image,
+            link: target[0].link,
             id: id
         });
     }
 
-    markAsRead = event => {
-        var id = event.target.id;
+    markAsRead = id => {
         API.updateBook(id)
             .then(() => {
                 this.getBooks();
@@ -130,24 +122,18 @@ class Books extends Component {
                                                     <b>{item.title}</b> by {item.author}
                                                 </a>
                                                 <ViewButton
-                                                    title={item.title}
-                                                    author={item.author}
-                                                    description={item.description}
-                                                    image={item.image}
-                                                    link={item.link}
-                                                    read={item.read}
                                                     id={item._id}
-                                                    onClick={this.openBook}
+                                                    onClick={() => this.openBook(item._id)}
                                                 />
                                                 <ReadButton
                                                     id={item._id}
                                                     className="modal-close waves-effect waves-green btn"
-                                                    onClick={this.markAsRead}
+                                                    onClick={() => this.markAsRead(item._id)}
                                                 />
                                                 <DeleteButton
                                                     id={item._id}
                                                     className="modal-close waves-effect waves-green btn"
-                                                    onClick={this.deleteBook}
+                                                    onClick={() => this.deleteBook(item._id)}
                                                 />
                                             </Item>
                                         ))}
@@ -168,19 +154,13 @@ class Books extends Component {
                                                     <b>{item.title}</b> by {item.author}
                                                 </a>
                                                 <ViewButton
-                                                    title={item.title}
-                                                    author={item.author}
-                                                    description={item.description}
-                                                    image={item.image}
-                                                    link={item.link}
-                                                    read={item.read}
                                                     id={item._id}
-                                                    onClick={this.openBook}
+                                                    onClick={() => this.openBook(item._id)}
                                                 />
                                                 <DeleteButton
                                                     id={item._id}
                                                     className="modal-close waves-effect waves-green btn"
-                                                    onClick={this.deleteBook}
+                                                    onClick={() => this.deleteBook(item._id)}
                                                 />
                                             </Item>
                                         ))}
