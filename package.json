@@ -1,6 +1,9 @@
 {
   "name": "Google-Books-Search",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.15.1"
+  },
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -23,6 +26,8 @@
     "if-env": "^1.0.4",
     "mongoose": "^5.4.13",
     "react": "^16.8.2",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "react-dom": "^16.6.3",
+    "react-scripts": "^2.1.1"
   }
 }
