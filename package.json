@@ -1,10 +1,7 @@
 {
-  "name": "Google-Books-Search",
+  "name": "mern",
   "version": "1.0.0",
-  "engines": {
-    "node": "10.15.1"
-  },
-  "description": "",
+  "description": "Mern Demo",
   "main": "server.js",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
@@ -12,7 +9,7 @@
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
     "client": "cd client && npm run start",
     "install": "cd client && npm install",
-    "build": "react-scripts build",
+    "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
   },
   "author": "",
